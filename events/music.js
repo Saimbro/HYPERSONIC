@@ -8,40 +8,57 @@ const fs = require('fs');
 const musicIcons = require('../UI/icons/musicicons');
 
 async function getSpotifyToken() {
-    const response = await axios.post('https://accounts.spotify.com/api/token', null, {
-        params: {
-            grant_type: 'client_credentials'
-        },
-        headers: {
-            'Authorization': `Basic ${Buffer.from(`${config.spotifyClientId}:${config.spotifyClientSecret}`).toString('base64')}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    });
-    return response.data.access_token;
+    try {
+        const response = await axios.post('https://accounts.spotify.com/api/token', 'grant_type=client_credentials', {
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${config.spotifyClientId}:${config.spotifyClientSecret}`).toString('base64')}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            timeout: 5000 // Optional: Set a timeout for the request
+        });
+        return response.data.access_token;
+    } catch (error) {
+        //console.error('Error fetching Spotify token:', error.message || error);
+        return null; // Return null or a default value if the request fails
+    }
 }
+
 
 async function getSpotifyTrackId(token, songName) {
-    const response = await axios.get('https://api.spotify.com/v1/search', {
-        params: {
-            q: songName,
-            type: 'track',
-            limit: 1
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    const track = response.data.tracks.items[0];
-    return track ? track.id : null;
+    try {
+        const response = await axios.get('https://api.spotify.com/v1/search', {
+            params: {
+                q: songName,
+                type: 'track',
+                limit: 1
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            timeout: 5000 // Optional: Set a timeout for the request
+        });
+        const track = response.data.tracks.items[0];
+        return track ? track.id : null;
+    } catch (error) {
+        //console.error('Error fetching Spotify track ID:', error.message || error);
+        return null; // Return null or a default value if the request fails
+    }
 }
 
+
 async function getSpotifyThumbnail(token, trackId) {
-    const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    return response.data.album.images[0]?.url || '';
+    try {
+        const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            timeout: 5000 // Optional: Set a timeout for the request
+        });
+        return response.data.album.images[0]?.url || '';
+    } catch (error) {
+        //console.error('Error fetching Spotify track thumbnail:', error.message || error);
+        return ''; // Return an empty string or a default value if the request fails
+    }
 }
 
 module.exports = (client) => {

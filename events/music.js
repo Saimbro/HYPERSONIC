@@ -28,7 +28,7 @@ module.exports = (client) => {
         });
 
         client.manager.on('nodeError', (node, error) => {
-            console.error(`\x1b[31m[ERROR]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
+            //console.error(`\x1b[31m[ LAVALINK ]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
         });
 
         client.manager.on('trackStart', async (player, track) => {

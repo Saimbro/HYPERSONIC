@@ -8,11 +8,11 @@
         "utility": true,
         "other": true,
         "hentai": false,
-        "lavalink": false,
+        "lavalink": true,
         "troll": true
     },
     "categories": {
-        "anime": false,
+        "anime": true,
         "basic": true,
         "utility": true,
         "moderation": true,
